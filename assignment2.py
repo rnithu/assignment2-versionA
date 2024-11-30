@@ -22,18 +22,40 @@ import argparse
 import os, sys
 
 def parse_command_args() -> object:
-    "Set up argparse here. Call this function inside main."
-    parser = argparse.ArgumentParser(description="Memory Visualiser -- See Memory Usage Report with bar charts",epilog="Copyright 2023")
-    parser.add_argument("-l", "--length", type=int, default=20, help="Specify the length of the graph. Default is 20.")
-    # add argument for "human-readable". USE -H, don't use -h! -h is reserved for --help which is created automatically.
-    # check the docs for an argparse option to store this as a boolean.
-    parser.add_argument("program", type=str, nargs='?', help="if a program is specified, show memory use of all associated processes. Show only total use is not.")
-    args = parser.parse_args()
-    return args
-# create argparse function
-# -H human readable
-# -r running only
 
+    parser = argparse.ArgumentParser(description="Memory Visualiser -- See Memory Usage Report with bar charts",epilog="Copyright 2023")
+
+    # To add length argument for graph length
+    parser.add_argument(
+        "-l", "--length",
+        type=int,
+        default=20,
+        help="Specify the length of the graph. Default is 20."
+    )
+
+    # To add human readable argument for human-readable output
+    parser.add_argument(
+        "-H", "--human-readable",
+        action="store_true",
+        help="Prints sizes in human-readable format"
+    )
+
+    # To add running-only argument for showing running processes only
+    parser.add_argument(
+        "-r", "--running-only",
+        action="store_true",
+        help="Only display running processes (optional)."
+    )
+
+    # Parse and return the argument
+    parser.add_argument(
+        "program",
+        type=str,
+        nargs="?",
+        help="If a program is specified, show memory use of all associated processes. Show only total use if not."
+    )
+
+    return parser.parse_args()
 #---------------------------------------------------------------------------------------------------------------------------------------------
                                                     # MILESTONE 01
 
@@ -135,11 +157,34 @@ def bytes_to_human_r(kibibytes: int, decimal_places: int=2) -> str:
     return str_result
 
 if __name__ == "__main__":
+
+    # Parse the command line arguments
     args = parse_command_args()
+
+    # If no program is provided, show system-wide memory usage
     if not args.program:
-        ...
+        # To print system-wide memory visualization
+        print(f"System-wide memory visualization. Graph length: {args.length}")
+
+        # check if output should be in human readable format and print a message
+        if args.human_readable:
+            print("Outputting in human-readable format.")
+
+        # To check if only running processes should be displayed and print a message
+        if args.running_only:
+            print("Only displaying running processes (no program specified).")
     else:
-        ...
+        # Print a message indicating program-specific memory visualization
+        print(f"Program-specific memory visualization for {args.program}. Graph length: {args.length}")
+
+        # check if output should be in human readable format and print a message
+        if args.human_readable:
+            print("Outputting in human-readable format.")
+
+        # Check if only running processes for the specified program should be displayed and print a message
+        if args.running_only:
+            print("Only displaying running processes for the specified program.")
+
     # process args
     # if no parameter passed, 
     # open meminfo.
