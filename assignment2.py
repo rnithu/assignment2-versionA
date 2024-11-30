@@ -7,7 +7,7 @@ Author: "Nithurshan Raveendran"
 Semester: "Winter"
 
 The python code in this file is original work written by
-"Nithursan". No code in this file is copied from any other source 
+"Nithurshan". No code in this file is copied from any other source 
 except those provided by the course instructor, including any person, 
 textbook, or on-line resource. I have not shared this python script 
 with anyone or anything except for submission for grading.  
@@ -54,11 +54,61 @@ def percent_to_graph(percent: float, length: int=20) -> str:
 
 def get_sys_mem() -> int:
     "return total system memory (used or available) in kB"
-    ...
+    """This returns the total system memory in kilobytes by reading the memtotal entry from /proc/meminfo"""
+    
+    try: 
+        # Open the file from the path in read mode to retrieve system memory details
+        with open("/proc/meminfo", "r") as file:
+            # Iterate throughout each line in the file and check if the a line starts with 'MemTotal'
+            for line in file:
+                if line.startswith("MemTotal:"):
+                    # Draw out system memory value from the file and return as an interger in kilobytes.
+                    return int(line.split()[1])
+    
+    # To handle incase file is not found or any other errors occur and exit the program with an error status to indicate the failure
+    except FileNotFoundError:
+        print("Error: /proc/meminfo file not found.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error reading system memory: {e}")
+        sys.exit(1)
 
 def get_avail_mem() -> int:
     "return total memory that is available"
-    ...
+    try:
+        # Open the file in read mode to retrieve system memory details
+        with open("/proc/meminfo", "r") as file:
+
+            # Variables for free memory and free swap memory
+            mem_free = 0
+            swap_free = 0
+
+            # To iterate each line in the file and check if it contains 'MemAvailable' and return the memory value in integer in kb
+            for line in file:
+                if line.startswith("MemAvailable:"):
+                    return int(line.split()[1])
+                
+                # To check if line contains 'MemFree' for free memory fallback and extract it in kb and store it
+                elif line.startswith("MemFree:"):
+                    mem_free = int(line.split()[1])
+
+                # To check if the line contains 'SwapFree' for free swap free memory fallback and then to extract it in kb and store it
+                elif line.startswith("SwapFree:"):
+                    swap_free = int(line.split()[1])
+
+            # This is to fall back to sum of MemFree and SwapFree if 'memAvailable' is not found and return the sum of free memory and free swap memory        
+            if mem_free and swap_free:
+                return mem_free + swap_free
+            
+            # To raise an error if no valid memory info is available  and handle cases where file not found and print the error status and exit the program
+            raise ValueError("MemAvailable not found, and fallback values are incomplete.")
+    except FileNotFoundError:
+        print("Error: /proc/meminfo file not found.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error reading available memory: {e}")
+        sys.exit(1)
+    
 
 def pids_of_prog(app_name: str) -> list:
     "given an app name, return all pids associated with app"
