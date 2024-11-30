@@ -152,12 +152,14 @@ def pids_of_prog(app_name: str) -> list:
 
 def rss_mem_of_pid(proc_id: str) -> int:
     "given a process id, return the resident memory used, zero if not found"
+    
+    #Initializing a variable to store RSS Memory Value
     rss = 0 
 
     try:
         # Open the smaps file for the given process ID
         with open(f'/proc/{proc_id}/smaps', 'r') as f:
-            
+
             # Iterate through each line in the file
             for line in f:
 
