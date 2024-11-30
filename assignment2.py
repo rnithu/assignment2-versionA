@@ -138,7 +138,17 @@ def get_avail_mem() -> int:
 
 def pids_of_prog(app_name: str) -> list:
     "given an app name, return all pids associated with app"
-    ...
+    try:
+        # Execute the pidof command to find out the PIDs of the application and read its output
+        output = os.popen(f"pidof {app_name}").read().strip()
+
+        # If the output is not empty, split it into a list otherwise return as empty list
+        return output.split() if output else []
+    
+    # To handle any exception that takes place and print an error message
+    except Exception as e:
+        print(f"Error retrieving PIDs for {app_name}: {e}")
+        return [] # Return an empty list incase an error occurs
 
 def rss_mem_of_pid(proc_id: str) -> int:
     "given a process id, return the resident memory used, zero if not found"
