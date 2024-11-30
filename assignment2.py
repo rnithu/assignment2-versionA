@@ -34,6 +34,9 @@ def parse_command_args() -> object:
 # -H human readable
 # -r running only
 
+#---------------------------------------------------------------------------------------------------------------------------------------------
+                                                    # MILESTONE 01
+
 # percent to graph function
 def percent_to_graph(percent: float, length: int=20) -> str: 
     "turns a percent 0.0 - 1.0 into a bar graph"
@@ -109,6 +112,7 @@ def get_avail_mem() -> int:
         print(f"Error reading available memory: {e}")
         sys.exit(1)
     
+#---------------------------------------------------------------------------------------------------------------------------------------------
 
 def pids_of_prog(app_name: str) -> list:
     "given an app name, return all pids associated with app"
