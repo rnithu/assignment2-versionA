@@ -187,32 +187,47 @@ def bytes_to_human_r(kibibytes: int, decimal_places: int=2) -> str:
 
 if __name__ == "__main__":
 
-    # Parse the command line arguments
-    args = parse_command_args()
+    # Parse the command-line arguments
+    args = parse_command_args() 
 
-    # If no program is provided, show system-wide memory usage
+    # Check if no program is provided
     if not args.program:
-        # To print system-wide memory visualization
-        print(f"System-wide memory visualization. Graph length: {args.length}")
 
-        # check if output should be in human readable format and print a message
+        # System-wide memory usage
+        total_mem = get_sys_mem() # Fetch total system memory
+        avail_mem = get_avail_mem() # Fetch available system memory
+        used_mem = total_mem - avail_mem # Calculate used memory
+        percent_used = used_mem / total_mem # Calculate percentage of memory used
+
+        # To convert memory values to human-readable format if requested
         if args.human_readable:
-            print("Outputting in human-readable format.")
+            total_mem = bytes_to_human_r(total_mem)
+            used_mem = bytes_to_human_r(used_mem)
 
-        # To check if only running processes should be displayed and print a message
-        if args.running_only:
-            print("Only displaying running processes (no program specified).")
+        # To display total memory, used memory, and memory usage graph
+        print(f"{'Total Memory':<15} {'Used Memory':<15} {'Graph':<20}")
+        print(f"{total_mem:<15} {used_mem:<15} {percent_to_graph(percent_used, args.length)}")
     else:
-        # Print a message indicating program-specific memory visualization
-        print(f"Program-specific memory visualization for {args.program}. Graph length: {args.length}")
+        # Program-specific memory usage
+        pids = pids_of_prog(args.program) 
 
-        # check if output should be in human readable format and print a message
-        if args.human_readable:
-            print("Outputting in human-readable format.")
+        # If no processes for the program are found, display a message
+        if not pids:
+            print(f"No running processes found for {args.program}.")
 
-        # Check if only running processes for the specified program should be displayed and print a message
-        if args.running_only:
-            print("Only displaying running processes for the specified program.")
+        else:
+            # Calculation for total memory used by all processes for the program
+            total_used_mem = sum(rss_mem_of_pid(pid) for pid in pids)
+
+            # Convert memory value to human-readable format if requested
+            if args.human_readable:
+                total_used_mem = bytes_to_human_r(total_used_mem)
+
+            # To display program name and total memory used
+            print(f"{'Program':<15} {'Used Memory':<15}")
+            print(f"{args.program:<15} {total_used_mem:<15}")
+
+
  
 
     # process args
