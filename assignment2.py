@@ -7,7 +7,7 @@ Author: "Nithurshan Raveendran"
 Semester: "Winter"
 
 The python code in this file is original work written by
-"Student Name". No code in this file is copied from any other source 
+"Nithursan". No code in this file is copied from any other source 
 except those provided by the course instructor, including any person, 
 textbook, or on-line resource. I have not shared this python script 
 with anyone or anything except for submission for grading.  
@@ -34,10 +34,23 @@ def parse_command_args() -> object:
 # -H human readable
 # -r running only
 
-def percent_to_graph(percent: float, length: int=20) -> str:
-    "turns a percent 0.0 - 1.0 into a bar graph"
-    ...
 # percent to graph function
+def percent_to_graph(percent: float, length: int=20) -> str: 
+    "turns a percent 0.0 - 1.0 into a bar graph"
+
+    # Ensure percent is fasten between 0.0 and 1.0 to prevent invalids inputs
+    percent = max(0.0, min(percent, 1.0))
+
+    # Calculate the filled length based on the percentage and total length, defined using the given formula
+    filled_length = int(percent * length)  
+
+    # To construct the bar graph by combining filled '#' characters and empty spaces to match the total length
+    bar_graph = f"{'#' * filled_length}{' ' * (length - filled_length)}"
+
+    # Return the final output of constructed graph
+    return bar_graph
+
+
 
 def get_sys_mem() -> int:
     "return total system memory (used or available) in kB"
