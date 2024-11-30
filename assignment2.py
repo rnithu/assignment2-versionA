@@ -14,7 +14,7 @@ with anyone or anything except for submission for grading.
 I understand that the Academic Honesty Policy will be enforced and 
 violators will be reported and appropriate action will be taken.
 
-Description: <Enter your documentation here>
+Description: This script visualizes memory usage. It displays system-wide memory usage or memory used by a specific program's processes in a user-friendly bar graph format. The script supports human-readable output and allows customization of the graph length.
 
 '''
 
